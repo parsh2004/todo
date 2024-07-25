@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@700&family=Oswald:wght@700&family=Poppins:wght@700&family=Roboto:wght@700&display=swap');
+
+
+#root {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    width: 100%;
+    background-size: cover;
+    background-image: url('image.jpg');
+    background-color: #FFAF45;
+    
+  }
+
+.todo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.393); 
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  margin: 180px auto;
+  }
+  
+  .title {
+    color: #FFAF45; 
+    font-size: 2em;
+    margin-bottom: 20px;
+    font-weight: 900;
+    font-family: 'Bebas Neue', sans-serif;
+  }
+  
+  .input-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .task-input {
+    padding: 10px;
+    border: 2px solid #FFAF45;
+    border-radius: 5px;
+    margin-right: 10px;
+    font-size: 1em;
+    font-family: 'Comic Sans MS',cursive;
+  }
+  
+  .add-button {
+    background-color: #FFAF45;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .add-button:hover {
+    background-color: #FFAF45;
+  }
+  
+  .task-list {
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .task-item {
+    display: flex;
+    justify-content: space-between;
+    background-color: white;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: 'Comic Sans MS',cursive;
+  }
+  
+  .task-buttons {
+    display: flex;
+    gap: 10px; /* Added space between buttons */
+  }
+
+  .edit-button ,.delete-button {
+    background-color: #FFAF45;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .edit-button {
+    background-color: #FFAF45;
+  }
+  
+  .edit-button:hover {
+    background-color: #d393b5;
+  }
+
+  .delete-button:hover {
+    background-color: #d393b5;
+  }
+  
