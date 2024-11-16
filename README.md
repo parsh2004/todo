@@ -9,30 +9,31 @@ Currently, two official plugins are available:
 
 
 ~~~
-# Evaluate the Model
-test_loss = model.evaluate(X_test, y_test)
-y_pred = model.predict(X_test)
-r_squared = r2_score(y_test, y_pred)
-mse = mean_squared_error(y_test, y_pred)
-mae = mean_absolute_error(y_test, y_pred)
-accuracy = 1 - (mae / np.mean(y_test))
-
-print(f"Test Loss (MSE): {test_loss:.2f}")
-print(f"R-squared: {r_squared:.2f}")
-print(f"Mean Squared Error: {mse:.2f}")
-print(f"Mean Absolute Error: {mae:.2f}")
-print(f"Accuracy: {accuracy * 100:.2f}%")
-# Visualization of Loss
-train_loss = history.history['loss']
-val_loss = history.history['val_loss']
-
-plt.figure(figsize=(10, 6))
-plt.plot(range(1, len(train_loss) + 1), train_loss, 'b', label='Training Loss')
-plt.plot(range(1, len(val_loss) + 1), val_loss, 'r', label='Validation Loss')
-plt.xlabel('Epochs')
-plt.ylabel('Mean Squared Error')
-plt.title('Training and Validation Loss')
-plt.legend()
+# Additional Findings
+# 1. Severity Prediction with Random Forest
+severity_X = data.drop(columns=['motor_UPDRS', 'total_UPDRS', 'measurement_id', 'subject#'])
+severity_y = data['total_UPDRS']
+X_train_severity, X_test_severity, y_train_severity, y_test_severity = train_test_split(severity_X, severity_y, test_size=0.2, random_state=42)
+rf_model = RandomForestRegressor(random_state=42)
+rf_model.fit(X_train_severity, y_train_severity)
+y_pred_severity = rf_model.predict(X_test_severity)
+print(f"Random Forest MSE for Severity Prediction: {mean_squared_error(y_test_severity, y_pred_severity):.2f}")
+# 2. Disease Progression Over Time
+progression_data = data[['test_time', 'total_UPDRS', 'subject#']].sort_values(by=['subject#', 'test_time'])
+sample_subject = progression_data[progression_data['subject#'] == 1]
+plt.plot(sample_subject['test_time'], sample_subject['total_UPDRS'], marker='o')
+plt.title("Disease Progression Over Time for Subject #1")
+plt.xlabel("Test Time")
+plt.ylabel("Total UPDRS Score")
 plt.show()
+# 3. Gender and Age Impact
+gender_analysis = data.groupby('sex')[['motor_UPDRS', 'total_UPDRS']].mean()
+print("Gender Analysis:")
+print(gender_analysis)
 
+sns.scatterplot(data=data, x='age', y='total_UPDRS', hue='sex', palette='coolwarm')
+plt.title("Impact of Age and Gender on Total UPDRS")
+plt.xlabel("Age")
+plt.ylabel("Total UPDRS Score")
+plt.show()
 ~~~
