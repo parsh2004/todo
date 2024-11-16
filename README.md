@@ -22,5 +22,17 @@ print(f"R-squared: {r_squared:.2f}")
 print(f"Mean Squared Error: {mse:.2f}")
 print(f"Mean Absolute Error: {mae:.2f}")
 print(f"Accuracy: {accuracy * 100:.2f}%")
+# Visualization of Loss
+train_loss = history.history['loss']
+val_loss = history.history['val_loss']
+
+plt.figure(figsize=(10, 6))
+plt.plot(range(1, len(train_loss) + 1), train_loss, 'b', label='Training Loss')
+plt.plot(range(1, len(val_loss) + 1), val_loss, 'r', label='Validation Loss')
+plt.xlabel('Epochs')
+plt.ylabel('Mean Squared Error')
+plt.title('Training and Validation Loss')
+plt.legend()
+plt.show()
 
 ~~~
