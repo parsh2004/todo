@@ -9,23 +9,7 @@ Currently, two official plugins are available:
 
 
 ~~~
-# Additional Findings
-# 1. Severity Prediction with Random Forest
-severity_X = data.drop(columns=['motor_UPDRS', 'total_UPDRS', 'measurement_id', 'subject#'])
-severity_y = data['total_UPDRS']
-X_train_severity, X_test_severity, y_train_severity, y_test_severity = train_test_split(severity_X, severity_y, test_size=0.2, random_state=42)
-rf_model = RandomForestRegressor(random_state=42)
-rf_model.fit(X_train_severity, y_train_severity)
-y_pred_severity = rf_model.predict(X_test_severity)
-print(f"Random Forest MSE for Severity Prediction: {mean_squared_error(y_test_severity, y_pred_severity):.2f}")
-# 2. Disease Progression Over Time
-progression_data = data[['test_time', 'total_UPDRS', 'subject#']].sort_values(by=['subject#', 'test_time'])
-sample_subject = progression_data[progression_data['subject#'] == 1]
-plt.plot(sample_subject['test_time'], sample_subject['total_UPDRS'], marker='o')
-plt.title("Disease Progression Over Time for Subject #1")
-plt.xlabel("Test Time")
-plt.ylabel("Total UPDRS Score")
-plt.show()
+
 # 3. Gender and Age Impact
 gender_analysis = data.groupby('sex')[['motor_UPDRS', 'total_UPDRS']].mean()
 print("Gender Analysis:")
@@ -36,4 +20,13 @@ plt.title("Impact of Age and Gender on Total UPDRS")
 plt.xlabel("Age")
 plt.ylabel("Total UPDRS Score")
 plt.show()
+# 4. Acoustic Feature-Based Prediction
+acoustic_features = [col for col in data.columns if 'Jitter' in col or 'Shimmer' in col or col in ['NHR', 'HNR', 'RPDE', 'DFA', 'PPE']]
+X_acoustic = data[acoustic_features]
+y_acoustic = data['total_UPDRS']
+X_train_acoustic, X_test_acoustic, y_train_acoustic, y_test_acoustic = train_test_split(X_acoustic, y_acoustic, test_size=0.2, random_state=42)
+acoustic_model = RandomForestRegressor(random_state=42)
+acoustic_model.fit(X_train_acoustic, y_train_acoustic)
+y_pred_acoustic = acoustic_model.predict(X_test_acoustic)
+print(f"Acoustic Feature MSE: {mean_squared_error(y_test_acoustic, y_pred_acoustic):.2f}")
 ~~~
