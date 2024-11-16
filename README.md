@@ -9,19 +9,31 @@ Currently, two official plugins are available:
 
 
 ~~~
-# Define the LSTM Model for KerasTuner
-def build_model(hp):
-    model = Sequential()
-    model.add(Input(shape=(1, X_train.shape[2])))
-    model.add(LSTM(hp.Int('units_1', min_value=64, max_value=256, step=32), activation='tanh', return_sequences=True))
-    model.add(Dropout(hp.Float('dropout_1', min_value=0.1, max_value=0.5, step=0.1)))
-    model.add(LSTM(hp.Int('units_2', min_value=32, max_value=128, step=16), activation='tanh'))
-    model.add(Dropout(hp.Float('dropout_2', min_value=0.1, max_value=0.5, step=0.1)))
-    model.add(Dense(hp.Int('dense_units', min_value=16, max_value=64, step=16), activation='relu'))
-    model.add(Dense(1))
-    model.compile(
-        optimizer=Adam(hp.Choice('learning_rate', values=[1e-2, 1e-3, 1e-4])),
-        loss='mean_squared_error'
-    )
-    return model
+# Use KerasTuner to Search for the Best Hyperparameters
+tuner = kt.RandomSearch(
+    build_model,
+    objective='val_loss',
+    max_trials=10,
+    directory='my_dir',
+    project_name='lstm_hyperparam_tuning'
+)
+
+# Early Stopping Callback
+early_stopping = EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
+
+# Run the Tuning Process
+tuner.search(X_train, y_train, epochs=50, validation_data=(X_test, y_test), callbacks=[early_stopping])
+best_hps = tuner.get_best_hyperparameters(num_trials=1)[0]
+
+# Build the Model with Best Hyperparameters
+model = tuner.hypermodel.build(best_hps)
+# Train the Final Model
+history = model.fit(
+    X_train, y_train,
+    epochs=100,
+    batch_size=32,
+    validation_data=(X_test, y_test),
+    callbacks=[early_stopping],
+    verbose=1
+)
 ~~~
