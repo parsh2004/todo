@@ -9,31 +9,18 @@ Currently, two official plugins are available:
 
 
 ~~~
-# Use KerasTuner to Search for the Best Hyperparameters
-tuner = kt.RandomSearch(
-    build_model,
-    objective='val_loss',
-    max_trials=10,
-    directory='my_dir',
-    project_name='lstm_hyperparam_tuning'
-)
+# Evaluate the Model
+test_loss = model.evaluate(X_test, y_test)
+y_pred = model.predict(X_test)
+r_squared = r2_score(y_test, y_pred)
+mse = mean_squared_error(y_test, y_pred)
+mae = mean_absolute_error(y_test, y_pred)
+accuracy = 1 - (mae / np.mean(y_test))
 
-# Early Stopping Callback
-early_stopping = EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
+print(f"Test Loss (MSE): {test_loss:.2f}")
+print(f"R-squared: {r_squared:.2f}")
+print(f"Mean Squared Error: {mse:.2f}")
+print(f"Mean Absolute Error: {mae:.2f}")
+print(f"Accuracy: {accuracy * 100:.2f}%")
 
-# Run the Tuning Process
-tuner.search(X_train, y_train, epochs=50, validation_data=(X_test, y_test), callbacks=[early_stopping])
-best_hps = tuner.get_best_hyperparameters(num_trials=1)[0]
-
-# Build the Model with Best Hyperparameters
-model = tuner.hypermodel.build(best_hps)
-# Train the Final Model
-history = model.fit(
-    X_train, y_train,
-    epochs=100,
-    batch_size=32,
-    validation_data=(X_test, y_test),
-    callbacks=[early_stopping],
-    verbose=1
-)
 ~~~
